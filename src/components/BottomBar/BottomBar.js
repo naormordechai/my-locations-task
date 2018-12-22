@@ -6,7 +6,7 @@ import injectSheet from 'react-jss';
 const styles = {
     container: {
         position: 'relative',
-        top: 'calc(100vh - 120px)',
+        top: 'calc(100vh - 150px)',
         width: '100%',
         background: '#000',
         color: '#fff',

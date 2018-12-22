@@ -11,12 +11,11 @@ const styles = {
 
 class CategoryPage extends Component {
     render() {
-        console.log('ppppp', this.props);
-
+        const { match } = this.props
         return (
             <div>
-                <TopBar />
-                <CategoryList categories={this.props.categories} locations={this.props.locations} /> :
+                {match.url.indexOf('category')  !== -1 ? <TopBar /> : <TopBar openMap="open in map"/>}
+                <CategoryList categories={this.props.categories} locations={this.props.locations} /> 
             </div>
         );
     }

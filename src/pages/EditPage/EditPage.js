@@ -1,6 +1,19 @@
 import React, { Component } from 'react';
 import * as actionTypes from '../../store/actions/actionTypes'
 import { connect } from 'react-redux'
+import injectSheet from 'react-jss'
+import { compose } from 'redux'
+
+
+const styles = {
+    container: {
+        maxWidth:'700px',
+        margin:'0 auto',
+        '& div:first-child':{
+            textAlign:'center'
+        }
+    }
+}
 
 class EditPage extends Component {
     constructor(props) {
@@ -43,12 +56,15 @@ class EditPage extends Component {
         }
     }
     render() {
+        const { classes } = this.props
         return (
-            <div>
-                <label htmlFor="name">name</label>
-                <input onChange={this.handlerName} type="text" id="name"
-                    placeholder="name" value={this.state.requestedCategory.name} />
-                <button onClick={this.handlerUpdate}>update</button>
+            <div className={classes.container}>
+                <div>
+                    <label htmlFor="name">name</label>
+                    <input onChange={this.handlerName} type="text" id="name"
+                        placeholder="name" value={this.state.requestedCategory.name} />
+                    <button onClick={this.handlerUpdate}>update</button>
+                </div>
             </div>
         );
     }
@@ -66,4 +82,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPage);
+export default compose(connect(mapStateToProps, mapDispatchToProps), injectSheet(styles))(EditPage)

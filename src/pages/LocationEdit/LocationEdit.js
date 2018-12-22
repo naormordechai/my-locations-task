@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
 import * as actionTypes from '../../store/actions/actionTypes'
+import injectSheet from 'react-jss'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
+
+const styles = {
+    container: {
+        maxWidth: '700px',
+        margin: '0 auto',
+        '& div:first-child': {
+            textAlign:'center'
+        }
+    }
+}
 
 class LocationEdit extends Component {
     constructor(props) {
@@ -92,9 +104,9 @@ class LocationEdit extends Component {
     }
 
     render() {
-        const { locations } = this.props
+        const { locations, classes } = this.props
         return (
-            <div>
+            <div className={classes.container}>
                 {this.state.requestedLocation && this.state.requestedLocation.name ?
                     <div>
                         <div>
@@ -150,4 +162,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LocationEdit);
+export default compose(connect(mapStateToProps, mapDispatchToProps), injectSheet(styles))(LocationEdit)

@@ -1,5 +1,15 @@
 import React from 'react'
+import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
+
+const styles = {
+    fWeight: {
+        fontWeight: '700'
+    },
+    container:{
+        textAlign:'center'
+    }
+}
 
 class CategoryDetails extends React.Component {
 
@@ -39,14 +49,30 @@ class CategoryDetails extends React.Component {
         })
     }
 
+    renderDetails = (classes) => {
+        if (this.state.requestedItem && this.state.requestedItem.name) {
+            if (this.props.match.url.indexOf('category') !== -1) {
+                return <div> <p>name: <span className={classes.fWeight}>{this.state.requestedItem.name}</span></p></div>
+            } else {
+                return (
+                    <div>
+                        <p>name: <span className={classes.fWeight}>{this.state.requestedItem.name}</span></p>
+                        <p>address: <span className={classes.fWeight}>{this.state.requestedItem.address}</span></p>
+                        <p>category: <span className={classes.fWeight}>{this.state.requestedItem.category}</span></p>
+                        <p>coords(lat): <span className={classes.fWeight}>{this.state.requestedItem.coords.lat}</span></p>
+                        <p>coords(lng): <span className={classes.fWeight}>{this.state.requestedItem.coords.lng}</span></p>
+                    </div>
+                )
+            }
+        }
+
+    }
+
     render() {
-        console.log(this.state);
-        
+        const { classes } = this.props
         return (
-            <div style={{ textAlign: 'center' }}>
-                {this.state.requestedItem && this.state.requestedItem.name ?
-                    <div>{this.state.requestedItem.name}</div> : null
-                }
+            <div className={classes.container}>
+                {this.renderDetails(classes)}
             </div>
         )
     }
@@ -59,4 +85,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(CategoryDetails)
+export default connect(mapStateToProps)(injectSheet(styles)(CategoryDetails))

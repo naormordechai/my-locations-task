@@ -21,13 +21,13 @@ class CategoryPreview extends React.Component {
                 isActive: true
             }
         }, () => {
-            this.props.onClikcCategory(this.state.activeCategory)
+            this.props.onClikcCategory({ ...this.state.activeCategory, typeTopic: 'category' })
         })
     }
 
     updateActiveLocation = (item) => {
         this.props.click(item)
-        this.props.onClikcCategory(item)
+        this.props.onClikcCategory({ ...item, typeTopic: 'location' })
     }
 
     render() {

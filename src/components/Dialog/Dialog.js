@@ -9,43 +9,58 @@ const styles = {
         position: 'fixed',
         top: '0',
         left: '0',
+        transform: 'translate(0)',
         background: 'rgba(100,100,100,.5)',
         zIndex: '10',
         color: '#fff',
+        transition: '.3s',
         '& > div': {
             display: 'flex',
             justifyContent: 'center',
-            marginTop: '50px',
-            fontSize: '25px',
+            marginTop: '150px',
+            fontSize: '15px',
+            fontWeight: '500',
             '& > div': {
                 border: '1px solid grey',
                 padding: '3px 25px',
                 borderRadius: '1000px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: '.3s',
+                '&:hover': {
+                    background: '#fff',
+                    color: '#000',
+                }
             },
             '& > div:not(:last-child)': {
                 marginRight: '40px',
-                background: 'rgba(150,150,150)'
+                background: 'rgba(10,10,10)'
             }
         }
     }
 }
 
 
+const goToReuestedPage = (requestedPage, props, dialogRef) => {
+    dialogRef.current.style.transform = 'translate(-100%, 0)'
+    setTimeout(() => {
+        props.history.push(requestedPage)
+    }, 300);
+}
+
 const dialog = (props) => {
+
+    let dialogRef = React.createRef();
     const { classes } = props
     return (
-            <div>
-                {props.location.pathname === '/' ?
-                    <div className={classes.dialog}>
-                        <div>
-                            {/* <Link to="/category">category</Link> */}
-                            {/* <Link to="/location">location</Link> */}
-                            <div onClick={() => props.history.push('/category')}>category</div>
-                            <div onClick={() => props.history.push('/location')}>locations</div>
-                        </div>
-                    </div> : null}
-            </div>
+        <div>
+            {props.location.pathname === '/' ?
+                <div ref={dialogRef} className={classes.dialog}>
+                    <div>
+                        <div onClick={() => goToReuestedPage('/category', props, dialogRef)}>category</div>
+                        <div onClick={() => goToReuestedPage('/location', props, dialogRef)}>locations</div>
+                    </div>
+                </div> : null}
+        </div>
     )
 }
 

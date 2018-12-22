@@ -10,11 +10,12 @@ const styles = {
         maxWidth: '100%',
         background: '#000',
         color: '#fff',
+        marginBottom:'30px',
     },
     topBar: {
         display: 'flex',
         justifyContent: 'space-around',
-        height: '20px'
+        height: '20px',
     }
 }
 
@@ -22,10 +23,12 @@ const styles = {
 class TopBar extends React.Component {
 
     goToDetails = () => {
-        if (this.props.history.location.pathname.indexOf('category') !== -1 && this.props.activeItem) {
+        if (this.props.history.location.pathname.indexOf('category') !== -1 &&
+            this.props.activeItem && this.props.activeItem.typeTopic === 'category') {
             this.props.history.push(`/category/${this.props.activeItem.id}`)
         } else {
-            if (this.props.activeItem) {
+            if (this.props.activeItem && this.props.activeItem.typeTopic === 'location'
+                && this.props.history.location.pathname.indexOf('category') === -1) {
                 this.props.history.push(`/location/${this.props.activeItem.id}`)
             }
         }
@@ -53,18 +56,24 @@ class TopBar extends React.Component {
 
     handlerEdit = () => {
         if (this.props.match.url.indexOf('category') !== -1) {
-            if (this.props.activeItem) {
+            if (this.props.activeItem && this.props.activeItem.typeTopic === 'category') {
                 this.props.history.push(`${this.props.match.url}/edit/${this.props.activeItem.id}`)
             }
         } else {
-            if (this.props.activeItem) {
+            if (this.props.activeItem && this.props.activeItem.typeTopic === 'location') {
                 this.props.history.push(`${this.props.match.url}/edit/${this.props.activeItem.id}`)
             }
         }
     }
 
+    goToMapPage = () => {
+        if (this.props.activeItem) {
+            this.props.history.push(`${this.props.match.url}/map/${this.props.activeItem.id}`)
+        }
+    }
+
     render() {
-        const { classes } = this.props
+        const { classes, openMap } = this.props
         return (
             <div className={classes.container}>
                 <div className={classes.topBar}>
@@ -72,6 +81,7 @@ class TopBar extends React.Component {
                     <div onClick={this.handlerAdd}>add</div>
                     <div onClick={this.handlerRemove}>remove</div>
                     <div onClick={this.handlerEdit}>edit</div>
+                    {openMap ? <div onClick={this.goToMapPage}>{openMap}</div> : null}
                 </div>
             </div>
         )

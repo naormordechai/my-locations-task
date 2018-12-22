@@ -19,16 +19,6 @@ const initialState = {
     ],
     locations: [
         {
-            id: '0.1546877',
-            name: 'Tel-Aviv',
-            address: 'Sokolov 87, Tel Aviv',
-            coords: {
-                lat: 32.093,
-                lng: 34.778,
-            },
-            category: 'Food'
-        },
-        {
             id: '0.39956465',
             name: 'Ramat Gan',
             address: 'HaBonim St 15, Ramat Gan, Israel',
@@ -37,6 +27,16 @@ const initialState = {
                 lng: 34.8022956,
             },
             category: 'Sport'
+        },
+        {
+            id: '0.1546877',
+            name: 'Tel-Aviv',
+            address: 'Sokolov 87, Tel Aviv',
+            coords: {
+                lat: 32.093,
+                lng: 34.778,
+            },
+            category: 'Food'
         },
         {
             id: '0.1748465',

@@ -6,8 +6,50 @@ import injectSheet from 'react-jss'
 
 const styles = {
     container: {
-        textAlign: 'center'
+        maxWidth: '350px',
+        border: '1px solid grey',
+        margin: '0 auto',
+        padding: '5px 10px',
+        borderRadius: '5px',
+        '& > h2': {
+            textAlign: 'center'
+        }
+    },
+    field: {
+        display: 'flex',
+        marginBottom: '10px',
+        '& label': {
+            flex: '0 0 40%'
+        },
+        '& input': {
+            flex: '1',
+            padding: '3px',
+            borderRadius: '5px',
+            outline: 'none',
+            border: '1px solid grey'
+        },
+    },
+    add: {
+        textAlign: 'center',
+        '& button': {
+            width: '50%',
+            borderRadius: '1000px',
+            outline: 'none',
+            border: '1px solid grey',
+            backgroundColor: '#222',
+            color: '#fff',
+            padding: '3px 20px',
+            fontSize: '15px',
+            transition: '.3s',
+            '&:hover': {
+                padding: '3px 25px',
+                backgroundColor: '#ccc',
+                color: '#222',
+                cursor: 'pointer'
+            }
+        }
     }
+
 }
 
 class AddPage extends Component {
@@ -108,7 +150,7 @@ class AddPage extends Component {
             this.state.newCategory.category !== 'choose' &&
             this.state.newLocation.coords.lat &&
             this.state.newLocation.coords.lng) {
-            this.props.onAddLocation({ ...this.state.newLocation, id: Math.random()+'' })
+            this.props.onAddLocation({ ...this.state.newLocation, id: Math.random() + '' })
         }
     }
     render() {
@@ -118,26 +160,33 @@ class AddPage extends Component {
                 <h2>Add</h2>
                 {this.props.match.url.indexOf('category') !== -1 ?
                     <div>
-                        <label htmlFor="name">name: </label>
-                        <input id="name" type="text" onChange={this.handleCategoryName} />
-                        <button onClick={this.addCategory}>Add</button>
+                        <div className={classes.field}>
+                            <label htmlFor="name">name: </label>
+                            <input id="name" type="text" onChange={this.handleCategoryName} />
+                        </div>
+                        <div className={classes.add}>
+                            <button onClick={this.addCategory}>add</button>
+                        </div>
                     </div> :
                     <div>
-                        <div>
+                        <div className={classes.field}>
                             <label htmlFor="name">name: </label>
                             <input id="name" type="text" placeholder="name" onChange={this.handleLocationName} />
                         </div>
-                        <div>
+                        <div className={classes.field}>
                             <label htmlFor="address">address: </label>
                             <input id="address" type="text" placeholder="address" onChange={this.handleAddressName} />
                         </div>
-                        <div>
-                            <label htmlFor="address">coordinates: </label>
-                            <input id="address" type="number" placeholder="lat" onChange={this.handleLat} />
-                            <input id="address" type="number" placeholder="lng" onChange={this.handleLng} />
+                        <div className={classes.field}>
+                            <label htmlFor="lat">coordinates:(lat) </label>
+                            <input id="lat" type="number" placeholder="lat" onChange={this.handleLat} />
                         </div>
-                        <div>
-                            <label htmlFor="address">category: </label>
+                        <div className={classes.field}>
+                            <label htmlFor="lng">coordinates:(lng) </label>
+                            <input id="lng" type="number" placeholder="lng" onChange={this.handleLng} />
+                        </div>
+                        <div className={classes.field}>
+                            <label>category: </label>
                             <select onChange={this.handleCategory}>
                                 <option>choose</option>
                                 {categories.map(category => (
@@ -145,7 +194,9 @@ class AddPage extends Component {
                                 ))}
                             </select>
                         </div>
-                        <button onClick={this.addLocation}>add</button>
+                        <div className={classes.add}>
+                            <button onClick={this.addLocation}>add</button>
+                        </div>
                     </div>
                 }
             </div>
