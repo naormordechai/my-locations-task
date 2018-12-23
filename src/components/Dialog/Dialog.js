@@ -20,12 +20,28 @@ const styles = {
             marginTop: '150px',
             fontSize: '18px',
             fontWeight: '500',
+            border: '1px solid grey',
+            width: '50%',
+            transform: 'translate(50%, 100%)',
+            padding: '15px',
+            background: '#444',
+            borderRadius: '5px',
+            boxShadow: '1px 2px 1px #000',
+            '@media(max-width:570px)': {
+                fontSize: '4vw',
+                width: '90%',
+                transform: 'translate(5%, 100%)',
+
+            },
             '& > div': {
                 border: '1px solid grey',
                 padding: '5px 25px',
                 borderRadius: '1000px',
                 cursor: 'pointer',
                 transition: '.3s',
+                '@media(max-width:570px)': {
+                    padding: '1.5vw 5vw',
+                },
                 '&:hover': {
                     background: '#fff',
                     color: '#000',
@@ -33,7 +49,10 @@ const styles = {
             },
             '& > div:not(:last-child)': {
                 marginRight: '40px',
-                background: 'rgba(10,10,10)'
+                background: 'rgba(10,10,10)',
+                '@media(max-width:570px)': {
+                    marginRight: '4vw'
+                },
             }
         }
     }

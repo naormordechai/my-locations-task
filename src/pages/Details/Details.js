@@ -7,7 +7,11 @@ const styles = {
         fontWeight: '700'
     },
     container:{
-        textAlign:'center'
+        textAlign:'center',
+        border:'1px solid grey',
+        width:'400px',
+        margin:'0 auto',
+        boxShadow:'1px 2px 1px #000'
     }
 }
 
