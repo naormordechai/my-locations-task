@@ -2,20 +2,39 @@ import React from 'react'
 import * as actionTypes from '../../store/actions/actionTypes'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import injectSheet from 'react-jss'
 
 const styles = {
     container: {
         maxWidth: '100%',
-        background: '#000',
-        color: '#fff',
-        marginBottom:'30px',
+        background: '#aaa',
+        borderRadius: '5px',
+        marginBottom: '30px',
+        cursor: 'pointer',
+        padding: '10px'
     },
     topBar: {
         display: 'flex',
         justifyContent: 'space-around',
         height: '20px',
+        '& div': {
+            transition: 'all .3s',
+            border:'1px solid #eee',
+            borderRadius:'5px',
+            padding:'3px 40px',
+            margin:'auto',
+            '@media(max-width:550px)':{
+                padding:'3px 3vw',
+                fontSize:'3.2vw'
+            }
+        },
+        '& div:hover': {
+            borderColor:'#000'
+        },
+        '& div:active': {
+            transform: 'scale(.9)'
+        }
     }
 }
 
@@ -23,19 +42,20 @@ const styles = {
 class TopBar extends React.Component {
 
     goToDetails = () => {
-        if (this.props.history.location.pathname.indexOf('category') !== -1 &&
-            this.props.activeItem && this.props.activeItem.typeTopic === 'category') {
-            this.props.history.push(`/category/${this.props.activeItem.id}`)
+        if (this.props.match.url.indexOf('category') !== -1) {
+            if (this.props.activeCategory.isActive) {
+                this.props.history.push(`/category/${this.props.activeCategory.id}`)
+            }
         } else {
-            if (this.props.activeItem && this.props.activeItem.typeTopic === 'location'
-                && this.props.history.location.pathname.indexOf('category') === -1) {
+            if (this.props.activeItem && this.props.activeItem.typeTopic === 'location') {
                 this.props.history.push(`/location/${this.props.activeItem.id}`)
             }
         }
+
     }
 
     handlerAdd = () => {
-        if (this.props.history.location.pathname.indexOf('category') !== -1) {
+        if (this.props.match.url.indexOf('category') !== -1) {
             this.props.history.push('/category add')
         } else {
             this.props.history.push('/location add')
@@ -46,10 +66,12 @@ class TopBar extends React.Component {
         if (this.props.match.url.indexOf('category') !== -1) {
             if (this.props.activeItem) {
                 this.props.onRemoveCategory(this.props.activeItem)
+                this.props.onRemoveActiveItem()
             }
         } else {
             if (this.props.activeItem) {
                 this.props.onRemoveLocation(this.props.activeItem)
+                this.props.onRemoveActiveItem()
             }
         }
     }
@@ -90,14 +112,16 @@ class TopBar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        activeItem: state.activeItem
+        activeItem: state.activeItem,
+        activeCategory: state.activeCategory
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         onRemoveCategory: (category) => dispatch({ type: actionTypes.REMOVE_CATEGORY, category }),
-        onRemoveLocation: (location) => dispatch({ type: actionTypes.REMOVE_LOCATION, location })
+        onRemoveLocation: (location) => dispatch({ type: actionTypes.REMOVE_LOCATION, location }),
+        onRemoveActiveItem: () => dispatch({ type: actionTypes.REMOVE_ACTIVE_ITEM })
     }
 }
 

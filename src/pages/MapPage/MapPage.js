@@ -14,16 +14,14 @@ class MapPage extends Component {
     }
 
     componentDidMount() {
-        this.geyLocationById()
+        this.getLocationById()
     }
 
 
-    geyLocationById = () => {
+    getLocationById = () => {
         const { id } = this.props.match.params;
         const { locations } = this.props;
-        const requestedLocation = locations.find(location => {
-            return location.id === id
-        })
+        const requestedLocation = locations.find(location => location.id === id)
         this.setState({
             ...this.state,
             center: requestedLocation.coords
@@ -37,7 +35,11 @@ class MapPage extends Component {
             <div style={{ height: '50vh', width: '100%' }}>
                 <GoogleMapReact
                     bootstrapURLKeys={{ key: 'AIzaSyDXvdByHYIUrNGQ9KyHjLAmc9lDePopXuU' }}
-                    defaultCenter={this.state.center}
+                    // defaultCenter={{
+                    //     lat: 59.95,
+                    //     lng: 30.33
+                    //   }}
+                    center={this.state.center}
                     defaultZoom={this.state.zoom}
                 >
                     <AnyReactComponent

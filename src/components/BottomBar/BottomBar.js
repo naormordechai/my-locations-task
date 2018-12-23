@@ -1,20 +1,33 @@
 import React from 'react'
-import { withRouter, Link, Route } from 'react-router-dom'
-import CategoryPage from '../../pages/CategoryPage/CategoryPage'
+import { withRouter, NavLink } from 'react-router-dom'
 import injectSheet from 'react-jss';
 
 const styles = {
     container: {
         position: 'relative',
-        top: 'calc(100vh - 150px)',
+        top: 'calc(100vh - 195px)',
         width: '100%',
-        background: '#000',
+        background: '#aaa',
+        borderRadius:'5px',
         color: '#fff',
-        padding: '6px 2px'
+        padding: '10px 2px'
     },
     bottomBar: {
         display: 'flex',
         justifyContent: 'space-evenly'
+    },
+    active: {
+        opacity: '.6'
+    },
+    link:{
+        textDecoration:'none',
+        border:'1px solid grey',
+        padding:'3px 30px',
+        borderRadius:'5px',
+        transtion:'.3s',
+        '&:hover':{
+            borderColor:'#000'
+        }
     }
 }
 
@@ -23,8 +36,8 @@ const bottomBar = (props) => {
     return (
         <div className={classes.container}>
             <div className={classes.bottomBar}>
-                <Link to="/category">Category</Link>
-                <Link to="/location">Location</Link>
+                <NavLink className={classes.link} activeClassName={classes.active} to="/category">Category</NavLink>
+                <NavLink className={classes.link} activeClassName={classes.active} to="/location">Location</NavLink>
             </div>
         </div>
     )

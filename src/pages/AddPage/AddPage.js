@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux'
+import StorageService from '../../services/StorageService'
 import * as actionTypes from '../../store/actions/actionTypes'
 import injectSheet from 'react-jss'
 
 const styles = {
     container: {
-        maxWidth: '350px',
+        maxWidth: '400px',
         border: '1px solid grey',
         margin: '0 auto',
-        padding: '5px 10px',
+        padding: '20px 10px',
         borderRadius: '5px',
-        '& > h2': {
-            textAlign: 'center'
+        '@media(max-width:550px)':{
+            padding:'5px 10px'
         }
+    },
+    addTitle:{
+        textAlign: 'center',
+        margin:'0 0 10px 0'
     },
     field: {
         display: 'flex',
-        marginBottom: '10px',
+        marginBottom: '5px',
         '& label': {
-            flex: '0 0 40%'
+            flex: '0 0 30%'
         },
-        '& input': {
+        '& input, & select': {
             flex: '1',
             padding: '3px',
             borderRadius: '5px',
@@ -32,25 +37,29 @@ const styles = {
     add: {
         textAlign: 'center',
         '& button': {
-            width: '50%',
+            width: '40%',
             borderRadius: '1000px',
             outline: 'none',
-            border: '1px solid grey',
-            backgroundColor: '#222',
-            color: '#fff',
+            border: '2px solid grey',
             padding: '3px 20px',
             fontSize: '15px',
             transition: '.3s',
+            fontWeight: '700',
+            cursor: 'pointer',
             '&:hover': {
+                background: '#aaa',
+                color: '#fff',
                 padding: '3px 25px',
-                backgroundColor: '#ccc',
-                color: '#222',
-                cursor: 'pointer'
+            },
+            '&:active': {
+                transform: 'scale(0.9)'
             }
         }
     }
 
 }
+
+
 
 class AddPage extends Component {
     constructor(props) {
@@ -58,8 +67,10 @@ class AddPage extends Component {
         this.state = {
             newCategory: {
                 name: '',
+                id: ''
             },
             newLocation: {
+                id: '',
                 name: '',
                 address: '',
                 coords: {
@@ -70,6 +81,7 @@ class AddPage extends Component {
             }
         }
     }
+
 
     handleCategoryName = e => {
         this.setState({
@@ -139,7 +151,13 @@ class AddPage extends Component {
 
     addCategory = () => {
         if (this.state.newCategory.name) {
-            this.props.onAddCategory({ ...this.state.newCategory, id: Math.random() + '' })
+            let category = {
+                ...this.state.newCategory,
+                id: Math.random() + ''
+            }
+            StorageService.store('requestedCategories', this.props.categories.concat(category))
+            this.props.onAddCategory(category)
+            this.props.history.push('/category')
         }
     }
 
@@ -150,55 +168,86 @@ class AddPage extends Component {
             this.state.newCategory.category !== 'choose' &&
             this.state.newLocation.coords.lat &&
             this.state.newLocation.coords.lng) {
-            this.props.onAddLocation({ ...this.state.newLocation, id: Math.random() + '' })
+            let location = {
+                ...this.state.newLocation,
+                id: Math.random() + ''
+            }
+            location.coords.lat = +location.coords.lat
+            location.coords.lng = +location.coords.lng
+            StorageService.store('requestedLocations', this.props.locations.concat(location))
+            this.props.onAddLocation(location)
+            this.props.history.push('/location')
+
         }
+    }
+
+    search() {
+        // var geocoder = new google.maps.Geocoder();
+        // var input = this.$refs.input.value
+        // geocoder.geocode({ 'address': input }, (results, status) => {
+        //     if (status === google.maps.GeocoderStatus.OK) {
+        //         console.log('xx');
+
+        //         // this.loc.lat = results[0].geometry.location.lat();
+        //         // this.loc.lng = results[0].geometry.location.lng();
+        //         // this.$store.commit('setPosition', this.loc)
+        //         // this.$store.dispatch({ type: 'loadParkings' });
+
+
+        //     } else {
+        //         alert("Geocode was not successful for the following reason: " + status);
+        //     }
+        // });
+
     }
     render() {
         const { classes, categories } = this.props
         return (
-            <div className={classes.container}>
-                <h2>Add</h2>
-                {this.props.match.url.indexOf('category') !== -1 ?
-                    <div>
-                        <div className={classes.field}>
-                            <label htmlFor="name">name: </label>
-                            <input id="name" type="text" onChange={this.handleCategoryName} />
+            <div>
+                <h2 className={classes.addTitle}>Add</h2>
+                <div className={classes.container}>
+                    {this.props.match.url.indexOf('category') !== -1 ?
+                        <div>
+                            <div className={classes.field}>
+                                <label htmlFor="name">name: </label>
+                                <input id="name" type="text" onChange={this.handleCategoryName} />
+                            </div>
+                            <div className={classes.add}>
+                                <button onClick={this.addCategory}>add</button>
+                            </div>
+                        </div> :
+                        <div>
+                            <div className={classes.field}>
+                                <label htmlFor="name">name: </label>
+                                <input id="name" type="text" placeholder="name" onChange={this.handleLocationName} />
+                            </div>
+                            <div className={classes.field}>
+                                <label htmlFor="address">address: </label>
+                                <input onKeyUp={this.search} ref={e => this.addressRef = e} id="address" type="text" placeholder="address" onChange={this.handleAddressName} />
+                            </div>
+                            <div className={classes.field}>
+                                <label htmlFor="lat">coords:(lat) </label>
+                                <input id="lat" type="number" placeholder="lat" onChange={this.handleLat} />
+                            </div>
+                            <div className={classes.field}>
+                                <label htmlFor="lng">coords:(lng) </label>
+                                <input id="lng" type="number" placeholder="lng" onChange={this.handleLng} />
+                            </div>
+                            <div className={classes.field}>
+                                <label>category: </label>
+                                <select onChange={this.handleCategory}>
+                                    <option>choose</option>
+                                    {categories.map(category => (
+                                        <option key={category.id}>{category.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={classes.add}>
+                                <button onClick={this.addLocation}>add</button>
+                            </div>
                         </div>
-                        <div className={classes.add}>
-                            <button onClick={this.addCategory}>add</button>
-                        </div>
-                    </div> :
-                    <div>
-                        <div className={classes.field}>
-                            <label htmlFor="name">name: </label>
-                            <input id="name" type="text" placeholder="name" onChange={this.handleLocationName} />
-                        </div>
-                        <div className={classes.field}>
-                            <label htmlFor="address">address: </label>
-                            <input id="address" type="text" placeholder="address" onChange={this.handleAddressName} />
-                        </div>
-                        <div className={classes.field}>
-                            <label htmlFor="lat">coordinates:(lat) </label>
-                            <input id="lat" type="number" placeholder="lat" onChange={this.handleLat} />
-                        </div>
-                        <div className={classes.field}>
-                            <label htmlFor="lng">coordinates:(lng) </label>
-                            <input id="lng" type="number" placeholder="lng" onChange={this.handleLng} />
-                        </div>
-                        <div className={classes.field}>
-                            <label>category: </label>
-                            <select onChange={this.handleCategory}>
-                                <option>choose</option>
-                                {categories.map(category => (
-                                    <option key={category.id}>{category.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className={classes.add}>
-                            <button onClick={this.addLocation}>add</button>
-                        </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         );
     }
@@ -206,7 +255,8 @@ class AddPage extends Component {
 
 const mapStateToProps = state => {
     return {
-        categories: state.categories
+        categories: state.categories,
+        locations: state.locations
     }
 }
 

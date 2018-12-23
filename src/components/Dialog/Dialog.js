@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter, Link, BrowserRouter as Router } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import injectSheet from 'react-jss'
 
 const styles = {
@@ -18,11 +18,11 @@ const styles = {
             display: 'flex',
             justifyContent: 'center',
             marginTop: '150px',
-            fontSize: '15px',
+            fontSize: '18px',
             fontWeight: '500',
             '& > div': {
                 border: '1px solid grey',
-                padding: '3px 25px',
+                padding: '5px 25px',
                 borderRadius: '1000px',
                 cursor: 'pointer',
                 transition: '.3s',

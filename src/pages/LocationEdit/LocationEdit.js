@@ -6,10 +6,45 @@ import { connect } from 'react-redux'
 
 const styles = {
     container: {
-        maxWidth: '700px',
+        maxWidth: '400px',
         margin: '0 auto',
+        border: '1px solid grey',
+        borderRadius: '5px',
+        padding: '15px 0',
         '& div:first-child': {
-            textAlign:'center'
+            textAlign: 'center'
+        }
+    },
+    box: {
+        display: 'flex',
+        '& label': {
+            flex: '0 0 30%'
+        },
+        '& input, & select': {
+            flex: '1',
+            padding: '3px 10px',
+            borderRadius: '5px',
+            border: '1px solid grey',
+            margin: '0 30px 10px 0'
+        }
+    },
+    btnUpdate: {
+        width: '35%',
+        borderRadius: '1000px',
+        outline: 'none',
+        border: '2px solid grey',
+        padding: '3px 20px',
+        fontSize: '15px',
+        fontWeight: '700',
+        transition: '.3s',
+        cursor: 'pointer',
+        '&:hover': {
+            background: '#aaa',
+            color: '#fff',
+            padding: '3px 25px',
+        },
+        '&:active': {
+            transform: 'scale(0.9)'
         }
     }
 }
@@ -27,9 +62,7 @@ class LocationEdit extends Component {
     }
 
     getRequestedLocation = () => {
-        const requestedLocation = this.props.locations.find(location => {
-            return location.id === this.props.match.params.id
-        })
+        const requestedLocation = this.props.locations.find(location => location.id === this.props.match.params.id)
         this.setState({
             ...this.state,
             requestedLocation
@@ -99,50 +132,55 @@ class LocationEdit extends Component {
             this.state.requestedLocation.category !== 'choose' &&
             this.state.requestedLocation.coords.lat &&
             this.state.requestedLocation.coords.lng) {
-            this.props.onUpdateLocation(this.state.requestedLocation)
+            let { requestedLocation } = this.state
+            requestedLocation.coords.lat = +requestedLocation.coords.lat
+            requestedLocation.coords.lng = +requestedLocation.coords.lng
+            this.props.onUpdateLocation(requestedLocation)
+            this.props.history.push('/location')
         }
     }
 
     render() {
         const { locations, classes } = this.props
+        const { requestedLocation } = this.state
         return (
             <div className={classes.container}>
-                {this.state.requestedLocation && this.state.requestedLocation.name ?
+                {requestedLocation && requestedLocation.name ?
                     <div>
-                        <div>
+                        <div className={classes.box}>
                             <label htmlFor="name">name: </label>
                             <input id="name"
-                                type="text" placeholder="name locaiotn"
-                                onChange={this.handleNameLocation} value={this.state.requestedLocation.name} />
+                                type="text" placeholder="location"
+                                onChange={this.handleNameLocation} value={requestedLocation.name} />
                         </div>
-                        <div>
+                        <div className={classes.box}>
                             <label htmlFor="address">address: </label>
                             <input id="address"
                                 type="text" placeholder="name locaiotn"
-                                onChange={this.handleAddressLocation} value={this.state.requestedLocation.address} />
+                                onChange={this.handleAddressLocation} value={requestedLocation.address} />
                         </div>
-                        <div>
+                        <div className={classes.box}>
                             <label htmlFor="let">coords:(lat) </label>
                             <input id="let"
                                 type="number" placeholder="lat"
-                                onChange={this.handleLatLocation} value={this.state.requestedLocation.coords.lat} />
+                                onChange={this.handleLatLocation} value={requestedLocation.coords.lat} />
                         </div>
-                        <div>
+                        <div className={classes.box}>
                             <label htmlFor="lng">coords:(lng) </label>
                             <input id="lng"
                                 type="number" placeholder="lng"
-                                onChange={this.handleLngLocation} value={this.state.requestedLocation.coords.lng} />
+                                onChange={this.handleLngLocation} value={requestedLocation.coords.lng} />
                         </div>
-                        <div>
+                        <div className={classes.box}>
                             <label>category: </label>
-                            <select value={this.state.requestedLocation.category} onChange={this.handleCategory}>
+                            <select value={requestedLocation.category} onChange={this.handleCategory}>
                                 <option>choose</option>
                                 {locations.map(location => (
                                     <option key={location.id}>{location.category}</option>
                                 ))}
                             </select>
-                            <button onClick={this.updateLocation}>update</button>
                         </div>
+                        <div><button className={classes.btnUpdate} onClick={this.updateLocation}>update</button></div>
                     </div> : null
                 }
             </div>

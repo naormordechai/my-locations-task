@@ -3,7 +3,7 @@ import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { withRouter } from 'react-router-dom'
-import CategoryPreview from '../CategoryPreview/CategoryPreview'
+import Preview from '../Preview/Preview'
 
 const styles = {
     preview: {
@@ -14,6 +14,10 @@ const styles = {
         fontWeight: '500',
         textAlign: 'center',
         borderRadius: '5px',
+        transition:'.3s',
+        '&:hover': {
+            background: 'rgba(100,100,100,.5)',
+        },
         '& > *': {
             marginBottom: '20px',
             padding: '5px 0',
@@ -54,6 +58,7 @@ class CategoryList extends React.Component {
                 requestedItems: this.props.locations
             })
         }
+
     }
 
     updateActiveCategory = (item) => {
@@ -63,77 +68,79 @@ class CategoryList extends React.Component {
         })
     }
 
-    renderLocations = (classes, activeCategory) => {
+    renderLocations = (locations, classes, activeCategory) => {
         let newLocations
         if (activeCategory.isActive) {
-            newLocations = this.state.requestedItems.map(location => {
+            newLocations = locations.map(location => {
                 if (location.category === activeCategory.name) {
                     return (
                         <div className={classes.preview} key={location.id}
                             style={this.state.activeItem.id === location.id ? { opacity: '.5' } : null}>
-                            <CategoryPreview location={location} click={() => this.updateActiveCategory(location)} />
+                            <Preview location={location} click={() => this.updateActiveCategory(location)} />
                         </div>
                     )
                 }
             })
-        } else {
-            newLocations = this.state.requestedItems.map(location => (
-                <div className={classes.preview} key={location.id}
-                    style={this.state.activeItem.id === location.id ? { opacity: '.5' } : null}>
-                    <CategoryPreview location={location} click={() => this.updateActiveCategory(location)} />
-                </div>
-            ))
+            if (newLocations[0] === undefined) {
+                return <div style={{ textAlign: 'center' }}>There is no location with the category you selected</div>
+            }
+
+            return newLocations
         }
-        return newLocations
+        return locations.map(location => (
+            <div className={classes.preview} key={location.id}
+                style={this.state.activeItem.id === location.id ? { opacity: '.5' } : null}>
+                <Preview location={location} click={() => this.updateActiveCategory(location)} />
+            </div>
+        ))
     }
 
-    clearSort = () => {
-        this.setState({
-            ...this.state,
-            requestedItems: this.props.locations
-        })
-    }
+    // clearSort = () => {
+    //     this.setState({
+    //         ...this.state,
+    //         requestedItems: this.props.locations
+    //     })
+    // }
 
-    doSort = () => {
-        let locations = [...this.state.requestedItems]
-        locations.sort((a, b) => {
-            var name1 = a.name.toUpperCase()
-            var name2 = b.name.toUpperCase()
-            if (name1 < name2) {
-                return -1
-            }
-            if (name1 > name2) {
-                return 1
-            }
-            return 0
-        })
-        this.setState({
-            ...this.state,
-            requestedItems: locations
-        })
-    }
+    // doSort = () => {
+    //     let locations = [...this.state.requestedItems]
+    //     locations.sort((a, b) => {
+    //         var name1 = a.name.toUpperCase()
+    //         var name2 = b.name.toUpperCase()
+    //         if (name1 < name2) {
+    //             return -1
+    //         }
+    //         if (name1 > name2) {
+    //             return 1
+    //         }
+    //         return 0
+    //     })
+    //     this.setState({
+    //         ...this.state,
+    //         requestedItems: locations
+    //     })
+    // }
 
 
     render() {
-        const { classes, locations, activeCategory } = this.props
-        const { requestedItems } = this.state
+        const { classes, locations, activeCategory, categories } = this.props
         return (
             <div>
                 {this.props.match.url.indexOf('category') !== -1 ?
                     <div>
-                        {requestedItems.map(category => (
+                        {categories.map(category => (
                             <div className={classes.preview} key={category.id}
                                 style={activeCategory.id === category.id && activeCategory.isActive ? { opacity: '.5' } : null}>
-                                <CategoryPreview category={category} click={() => this.updateActiveCategory(category)} />
+                                <Preview category={category} click={() => this.updateActiveCategory(category)} />
                             </div>
                         ))}
                     </div> :
                     <div>
                         <div className={classes.sortStyleBox}>
-                            <button onClick={this.doSort}>sort</button>
-                            <button onClick={this.clearSort}>clear</button>
+                            {/* <button onClick={this.doSort}>sort</button> */}
+                            {/* <button onClick={this.clearSort}>clear</button> */}
                         </div>
-                        {this.renderLocations(classes, activeCategory)}
+                        {this.renderLocations(locations, classes, activeCategory)}
                     </div>
                 }
             </div>

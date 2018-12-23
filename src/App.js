@@ -4,28 +4,26 @@ import './App.css'
 import {
   BrowserRouter as Router,
   Route,
-  NavLink,
-  Redirect,
-  Switch,
-  withRouter
 } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import * as actionTypes from './store/actions/actionTypes'
-import TopBar from './components/TopBar/TopBar'
 import BottomBar from './components/BottomBar/BottomBar'
-import CategoryPage from './pages/CategoryPage/CategoryPage'
-import CategoryDetails from './pages/CategoryDetails/CategoryDetails'
+import InitPage from './pages/InitPage/InitPage'
+import Details from './pages/Details/Details'
 import AddPage from './pages/AddPage/AddPage'
 import Dialog from './components/Dialog/Dialog'
-import EditPage from './pages/EditPage/EditPage'
+import CategoryEdit from './pages/CategoryEdit/CategoryEdit'
 import LocationEdit from './pages/LocationEdit/LocationEdit'
 import MapPage from './pages/MapPage/MapPage'
+import './App.css';
+
 
 const styles = {
   container: {
     maxWidth: '800px',
     margin: '0 auto',
+    fontFamily: 'Arial'
   },
   topApp: {
     textAlign: 'center'
@@ -54,6 +52,9 @@ const styles = {
       color: '#000',
       background: '#fff',
       padding: '3px 25px'
+    },
+    '&:active': {
+      transform: 'scale(.9)'
     }
   }
 }
@@ -61,28 +62,34 @@ const styles = {
 class App extends Component {
 
   clearCategoryActive = () => {
-    this.props.onRemoveActiveCategory(false)
+    if (this.props.activeItem) {
+      if (this.props.activeItem.typeTopic === 'category') {
+        this.props.onRemoveActiveItem()
+      }
+    }
+    this.props.onRemoveActiveCategory()
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, activeItem } = this.props
     return (
       <Router>
         <div className={classes.container}>
           <Dialog />
           <div className={classes.topApp}>
             <h1>My Locations</h1>
+            {activeItem ? <h3>active: {activeItem.name} :)</h3> : <h3>nothing is active :(</h3>}
             <button className={classes.btnClear} onClick={this.clearCategoryActive}>Clear Category</button>
           </div>
           <BottomBar />
           <div>
-            <Route path="/location" exact component={CategoryPage} />
-            <Route path="/category" exact component={CategoryPage} />
+            <Route path="/location" exact component={InitPage} />
+            <Route path="/category" exact component={InitPage} />
             <Route path="/category add" exact component={AddPage} />
             <Route path="/location add" exact component={AddPage} />
-            <Route path="/category/:id" exact component={CategoryDetails} />
-            <Route path="/location/:id" exact component={CategoryDetails} />
-            <Route path="/category/edit/:id" exact component={EditPage} />
+            <Route path="/category/:id" exact component={Details} />
+            <Route path="/location/:id" exact component={Details} />
+            <Route path="/category/edit/:id" exact component={CategoryEdit} />
             <Route path="/location/edit/:id" exact component={LocationEdit} />
             <Route path="/location/map/:id" exact component={MapPage} />
           </div>
@@ -92,11 +99,18 @@ class App extends Component {
   }
 }
 
-
-const mapDispatchToProps = dispatch => {
+const mapStateToDispatch = state => {
   return {
-    onRemoveActiveCategory: (f) => dispatch({ type: actionTypes.REMOVE_ACTIVE_CATEGORY, f })
+    activeItem: state.activeItem
   }
 }
 
-export default compose(connect(null, mapDispatchToProps), injectSheet(styles))(App)
+const mapDispatchToProps = dispatch => {
+  return {
+    onRemoveActiveCategory: (f) => dispatch({ type: actionTypes.REMOVE_ACTIVE_CATEGORY }),
+    onRemoveActiveItem: () => dispatch({ type: actionTypes.REMOVE_ACTIVE_ITEM })
+
+  }
+}
+
+export default compose(connect(mapStateToDispatch, mapDispatchToProps), injectSheet(styles))(App)
