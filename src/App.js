@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import injectSheet from 'react-jss'
-import './App.css'
 import {
   BrowserRouter as Router,
   Route,
@@ -16,7 +15,6 @@ import Dialog from './components/Dialog/Dialog'
 import CategoryEdit from './pages/CategoryEdit/CategoryEdit'
 import LocationEdit from './pages/LocationEdit/LocationEdit'
 import MapPage from './pages/MapPage/MapPage'
-import './App.css';
 
 
 const styles = {

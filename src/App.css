@@ -1,7 +1,0 @@
-*,
-*::before,
-*::after {
-  margin: none;
-  padding: none;
-  box-sizing: border-box;
-}
