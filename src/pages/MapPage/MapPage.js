@@ -34,7 +34,7 @@ class MapPage extends Component {
             // Important! Always set the container height explicitly
             <div style={{ height: '50vh', width: '100%' }}>
                 <GoogleMapReact
-                    bootstrapURLKeys={{ key: 'AIzaSyDXvdByHYIUrNGQ9KyHjLAmc9lDePopXuU' }}
+                    bootstrapURLKeys={{ key: 'AIzaSyBT1uuJZ2OSPmHepbc1p9JpIiBsaQs6C-M' }}
                     // defaultCenter={{
                     //     lat: 59.95,
                     //     lng: 30.33
